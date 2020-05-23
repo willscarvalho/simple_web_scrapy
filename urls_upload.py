@@ -122,12 +122,11 @@ def main():
     driver = driver_web()
     btn_carregar, btn_scolled = btn_carregar_conteudo(driver)
     sleep(5)
-    # carregar_web_completa(btn_carregar, btn_scolled)
-    soup = BeautifulSoup(driver.page_source, 'lxml')
+    carregar_web_completa(btn_carregar, btn_scolled)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
     jobs = soup.select('.search-results.col-xs-12.col-sm-9 article')
     css = css_class()
     links_jobs = driver.find_elements_by_css_selector('.listing-item__logo a')
-    urls = transform_links_list(links_jobs, 'href')
     l_titulo, l_data, l_empresa, l_localizacao, l_descricao = criar_l()
     for job in jobs:
         titulo, empresa, localizacao, data, descricao = loop_jobs(job, css)
@@ -137,6 +136,7 @@ def main():
         l_localizacao.append(localizacao)
         l_data.append(data)
         l_descricao.append(descricao)
+    driver.close()
     data_frame = pd.DataFrame({
         'titulo': l_titulo,
         'data': l_data,
